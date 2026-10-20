@@ -2,6 +2,7 @@
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BerlinClockTest {
 
@@ -72,4 +73,107 @@ class BerlinClockTest {
                 clock.convertToBerlinClock("00:59:01"));
     }
 
+    @Test
+    void rejectsNullDigitalTime() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> clock.convertToBerlinClock(null)
+        );
+    }
+
+    @Test
+    void rejectsNullStringDigitalTime() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> clock.convertToBerlinClock("null")
+        );
+    }
+
+    @Test
+    void rejectsEmptyStringDigitalTime() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> clock.convertToBerlinClock("  ")
+        );
+    }
+
+    @Test
+    void rejectsInvalidHourDigitalTime() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> clock.convertToBerlinClock("25:00:00")
+        );
+    }
+
+    @Test
+    void rejectsInvalidMinDigitalTime() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> clock.convertToBerlinClock("12:90:15")
+        );
+    }
+
+    @Test
+    void rejectsInvalidSecDigitalTime() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> clock.convertToBerlinClock("12:00:85")
+        );
+    }
+
+    @Test
+    void rejectsInvalidDigitalTime() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> clock.convertToBerlinClock("00:12")
+        );
+    }
+
+    @Test
+    void rejectsNegativeHour() {
+        assertThrows(IllegalArgumentException.class,
+                () -> clock.convertToBerlinClock("-1:00:00"));
+    }
+
+    @Test
+    void rejectsNegativeMinutes() {
+        assertThrows(IllegalArgumentException.class,
+                () -> clock.convertToBerlinClock("12:-1:00"));
+    }
+
+    @Test
+    void rejectsNegativeSeconds() {
+        assertThrows(IllegalArgumentException.class,
+                () -> clock.convertToBerlinClock("12:00:-1"));
+    }
+
+    @Test
+    void rejectsSingleDigitHour() {
+        assertThrows(IllegalArgumentException.class,
+                () -> clock.convertToBerlinClock("1:00:00"));
+    }
+
+    @Test
+    void rejectsMissingSeconds() {
+        assertThrows(IllegalArgumentException.class,
+                () -> clock.convertToBerlinClock("12:00:"));
+    }
+
+    @Test
+    void rejectsExtraTimeComponent() {
+        assertThrows(IllegalArgumentException.class,
+                () -> clock.convertToBerlinClock("12:00:00:00"));
+    }
+
+    @Test
+    void rejectsAlphabeticTime() {
+        assertThrows(IllegalArgumentException.class,
+                () -> clock.convertToBerlinClock("ab:cd:ef"));
+    }
+
+    @Test
+    void rejectsHourWithLeadingWhitespace() {
+        assertThrows(IllegalArgumentException.class,
+                () -> clock.convertToBerlinClock(" 12:00:00"));
+    }
 }
