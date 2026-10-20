@@ -75,11 +75,23 @@ public class BerlinClock {
     // Feature 2: Berlin Clock -> Digital time
     public String toDigitalTime(String berlinTime) {
 
+        if (berlinTime == null || berlinTime.trim().isEmpty() || berlinTime.length() != 24) {
+            throw new IllegalArgumentException("Berlin time cannot be empty and must contain 24 characters");
+        }
+
         String secondsRow = berlinTime.substring(0, 1);
         String fiveHourRow = berlinTime.substring(1, 5);
         String oneHourRow = berlinTime.substring(5, 9);
         String fiveMinuteRow = berlinTime.substring(9, 20);
         String oneMinuteRow = berlinTime.substring(20, 24);
+
+        validateLightPatterns(
+                secondsRow,
+                fiveHourRow,
+                oneHourRow,
+                fiveMinuteRow,
+                oneMinuteRow
+        );
 
         int hours = countLights(fiveHourRow, 'R') * 5
                 + countLights(oneHourRow, 'R');
@@ -103,5 +115,41 @@ public class BerlinClock {
         }
 
         return count;
+    }
+
+    private void validateLightPatterns(
+            String secondsRow,
+            String fiveHourRow,
+            String oneHourRow,
+            String fiveMinuteRow,
+            String oneMinuteRow) {
+
+        if (!secondsRow.matches("[YO]")
+                || !fiveHourRow.matches("R{0,4}O{0,4}")
+                || !oneHourRow.matches("R{0,4}O{0,4}")
+                || !oneMinuteRow.matches("Y{0,4}O{0,4}")) {
+            throw new IllegalArgumentException(
+                    "Invalid Berlin Clock light pattern"
+            );
+        }
+
+        boolean offSeen = false;
+
+        for (int i = 0; i < fiveMinuteRow.length(); i++) {
+            char light = fiveMinuteRow.charAt(i);
+
+            if (light == 'O') {
+                offSeen = true;
+                continue;
+            }
+
+            char expected = (i + 1) % 3 == 0 ? 'R' : 'Y';
+
+            if (offSeen || light != expected) {
+                throw new IllegalArgumentException(
+                        "Invalid five-minute row"
+                );
+            }
+        }
     }
 }

@@ -235,4 +235,78 @@ class BerlinClockTest {
         assertEquals("23:59:00",
                 clock.toDigitalTime("YRRRRRRROYYRYYRYYRYYYYYY"));
     }
+
+    @Test
+    void rejectsNullBerlinTime() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> clock.toDigitalTime(null)
+        );
+    }
+
+    @Test
+    void rejectsEmptyStringBerlinTime() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> clock.toDigitalTime("  ")
+        );
+    }
+
+    @Test
+    void rejectsInvalidBerlinTimeLength() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> clock.toDigitalTime("YOOOO")
+        );
+    }
+
+    @Test
+    void rejectsInvalidBerlinTimeCharacters() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> clock.toDigitalTime("YOODFGHOOOOOOOOOOOOOOOOO")
+        );
+    }
+
+    @Test
+    void rejectsBerlinTimeWithTwentyThreeCharacters() {
+        assertThrows(IllegalArgumentException.class,
+                () -> clock.toDigitalTime("YOOOOOOOOOOOOOOOOOOOOOO"));
+    }
+
+    @Test
+    void rejectsBerlinTimeWithTwentyFiveCharacters() {
+        assertThrows(IllegalArgumentException.class,
+                () -> clock.toDigitalTime("YOOOOOOOOOOOOOOOOOOOOOOOO"));
+    }
+
+    @Test
+    void rejectsHourRowWithRedLightAfterOffLight() {
+        assertThrows(IllegalArgumentException.class,
+                () -> clock.toDigitalTime("YOOROOOOOOOOOOOOOOOOOOOO"));
+    }
+
+    @Test
+    void rejectsFiveMinuteRowWithIncorrectRedLightPosition() {
+        assertThrows(IllegalArgumentException.class,
+                () -> clock.toDigitalTime("YOOOOOOOOYROOOOOOOOOOOO"));
+    }
+
+    @Test
+    void rejectsFiveMinuteRowWithLightOnAfterOffLight() {
+        assertThrows(IllegalArgumentException.class,
+                () -> clock.toDigitalTime("YOOOOOOOOOYYROOOOOOOOOO"));
+    }
+
+    @Test
+    void rejectsOneMinuteRowWithYellowAfterOffLight() {
+        assertThrows(IllegalArgumentException.class,
+                () -> clock.toDigitalTime("YOOOOOOOOOOOOOOOOOOOYOYO"));
+    }
+
+    @Test
+    void rejectsLowercaseCharacters() {
+        assertThrows(IllegalArgumentException.class,
+                () -> clock.toDigitalTime("yoooooooooooooooooooooo"));
+    }
 }
