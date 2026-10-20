@@ -1,6 +1,14 @@
 
 public class BerlinClock {
 
+    private static final int BERLIN_CLOCK_LENGTH = 24;
+    private static final int HOUR_ROW_LENGTH = 4;
+    private static final int FIVE_MINUTE_ROW_LENGTH = 11;
+
+    private static final char OFF = 'O';
+    private static final char RED = 'R';
+    private static final char YELLOW = 'Y';
+
     // Feature 1: Digital time -> Berlin Clock
     public String convertToBerlinClock(String time) {
         validateDigitalTime(time);
@@ -12,10 +20,10 @@ public class BerlinClock {
         int seconds = parts[2];
 
         return (secondsLamp(seconds))
-                + row(hours / 5, 4, 'R')
-                + row(hours % 5, 4, 'R')
+                + row(hours / 5,HOUR_ROW_LENGTH, RED)
+                + row(hours % 5,HOUR_ROW_LENGTH, RED)
                 + minuteRow(minutes / 5)
-                + row(minutes % 5, 4, 'Y');
+                + row(minutes % 5,HOUR_ROW_LENGTH, YELLOW);
     }
 
     private int[] parseTime(String time) {
@@ -61,7 +69,7 @@ public class BerlinClock {
         StringBuilder result = new StringBuilder(length);
 
         for (int i = 0; i < length; i++) {
-            result.append(i < lightsOn ? color : 'O');
+            result.append(i < lightsOn ? color : OFF);
         }
 
         return result.toString();
@@ -70,11 +78,11 @@ public class BerlinClock {
     private String minuteRow(int lightsOn) {
         StringBuilder result = new StringBuilder();
 
-        for (int i = 1; i <= 11; i++) {
+        for (int i = 1; i <= FIVE_MINUTE_ROW_LENGTH; i++) {
             if (i > lightsOn) {
-                result.append('O');
+                result.append(OFF);
             } else {
-                result.append(i % 3 == 0 ? 'R' : 'Y');
+                result.append(i % 3 == 0 ? RED : YELLOW);
             }
         }
 
@@ -88,7 +96,7 @@ public class BerlinClock {
     // Feature 2: Berlin Clock -> Digital time
     public String toDigitalTime(String berlinTime) {
 
-        if (berlinTime == null || berlinTime.trim().isEmpty() || berlinTime.length() != 24) {
+        if (berlinTime == null || berlinTime.trim().isEmpty() || berlinTime.length() != BERLIN_CLOCK_LENGTH) {
             throw new IllegalArgumentException("Berlin time cannot be empty and must contain 24 characters");
         }
 
@@ -96,7 +104,7 @@ public class BerlinClock {
         String fiveHourRow = berlinTime.substring(1, 5);
         String oneHourRow = berlinTime.substring(5, 9);
         String fiveMinuteRow = berlinTime.substring(9, 20);
-        String oneMinuteRow = berlinTime.substring(20, 24);
+        String oneMinuteRow = berlinTime.substring(20, BERLIN_CLOCK_LENGTH);
 
         validateLightPatterns(
                 secondsRow,
@@ -106,12 +114,12 @@ public class BerlinClock {
                 oneMinuteRow
         );
 
-        int hours = countLights(fiveHourRow, 'R') * 5
-                + countLights(oneHourRow, 'R');
+        int hours = countLights(fiveHourRow, RED) * 5
+                + countLights(oneHourRow, RED);
 
-        int minutes = countLights(fiveMinuteRow, 'Y')
-                + countLights(fiveMinuteRow, 'R');
-        minutes = minutes * 5 + countLights(oneMinuteRow, 'Y');
+        int minutes = countLights(fiveMinuteRow, YELLOW)
+                + countLights(fiveMinuteRow, RED);
+        minutes = minutes * 5 + countLights(oneMinuteRow, YELLOW);
 
         int seconds = secondsRow.equals("Y") ? 0 : 1;
 
@@ -151,12 +159,12 @@ public class BerlinClock {
         for (int i = 0; i < fiveMinuteRow.length(); i++) {
             char light = fiveMinuteRow.charAt(i);
 
-            if (light == 'O') {
+            if (light == OFF) {
                 offSeen = true;
                 continue;
             }
 
-            char expected = (i + 1) % 3 == 0 ? 'R' : 'Y';
+            char expected = (i + 1) % 3 == 0 ? RED : YELLOW;
 
             if (offSeen || light != expected) {
                 throw new IllegalArgumentException(
