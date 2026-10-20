@@ -12,10 +12,10 @@ public class BerlinClock {
         int seconds = Integer.parseInt(parts[2]);
 
         return (seconds % 2 == 0 ? "Y" : "O")
-                + row(hours / 5, 'R')
-                + row(hours % 5, 'R')
+                + row(hours / 5, 4, 'R')
+                + row(hours % 5, 4, 'R')
                 + minuteRow(minutes / 5)
-                + row(minutes % 5, 'Y');
+                + row(minutes % 5, 4, 'Y');
     }
 
     private void validateDigitalTime(String time) {
@@ -47,11 +47,10 @@ public class BerlinClock {
         }
     }
 
-    private String row(int lightsOn, char color) {
-        StringBuilder result = new StringBuilder();
+    private String row(int lightsOn, int length, char color) {
+        StringBuilder result = new StringBuilder(length);
 
-        int total = 4;
-        for (int i = 0; i < total; i++) {
+        for (int i = 0; i < length; i++) {
             result.append(i < lightsOn ? color : 'O');
         }
 
