@@ -47,4 +47,29 @@ class BerlinClockTest {
                 clock.convertToBerlinClock("11:37:01")
         );
     }
+
+    @Test
+    void convertsOddHourAndMinuteBoundaries() {
+        assertEquals("OROOOOOOOYOOOOOOOOOOOOOO",
+                clock.convertToBerlinClock("05:05:01"));
+    }
+
+    @Test
+    void convertsEvenSecond() {
+        assertEquals("YOOOOOOOOOOOOOOOOOOOOOOO",
+                clock.convertToBerlinClock("00:00:02"));
+    }
+
+    @Test
+    void convertsMaximumValidHour() {
+        assertEquals("ORRRRRRROOOOOOOOOOOOOOOO",
+                clock.convertToBerlinClock("23:00:01"));
+    }
+
+    @Test
+    void convertsMaximumValidMinute() {
+        assertEquals("OOOOOOOOOYYRYYRYYRYYYYYY",
+                clock.convertToBerlinClock("00:59:01"));
+    }
+
 }
