@@ -185,4 +185,54 @@ class BerlinClockTest {
                 clock.toDigitalTime("YOOOOOOOOOOOOOOOOOOOOOOO")
         );
     }
+
+    @Test
+    void convertsBerlinTimeTo131701() {
+        assertEquals(
+                "13:17:01",
+                clock.toDigitalTime("ORROORRROYYROOOOOOOOYYOO")
+        );
+    }
+
+    @Test
+    void convertsBerlinTimeTo113701() {
+        assertEquals(
+                "11:37:01",
+                clock.toDigitalTime("ORROOROOOYYRYYRYOOOOYYOO")
+        );
+    }
+
+    @Test
+    void convertsBerlinEndOfDayOneHourBeforeToDigitalTime() {
+        assertEquals(
+                "23:59:00",
+                clock.toDigitalTime("YRRRRRRROYYRYYRYYRYYYYYY")
+        );
+    }
+
+    @Test
+    void convertsBerlinEndOfDayToDigitalTime() {
+        assertEquals(
+                "23:59:59",
+                clock.toDigitalTime("ORRRRRRROYYRYYRYYRYYYYYY")
+        );
+    }
+
+    @Test
+    void convertsBerlinTimeTo000001() {
+        assertEquals("00:00:01",
+                clock.toDigitalTime("OOOOOOOOOOOOOOOOOOOOOOOO"));
+    }
+
+    @Test
+    void convertsBerlinTimeTo1234() {
+        assertEquals("12:34:00",
+                clock.toDigitalTime("YRROORROOYYRYYROOOOOYYYY"));
+    }
+
+    @Test
+    void convertsBerlinTimeTo2359() {
+        assertEquals("23:59:00",
+                clock.toDigitalTime("YRRRRRRROYYRYYRYYRYYYYYY"));
+    }
 }
