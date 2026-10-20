@@ -5,17 +5,27 @@ public class BerlinClock {
     public String convertToBerlinClock(String time) {
         validateDigitalTime(time);
 
-        String[] parts = time.split(":");
+        int[] parts = parseTime(time);
 
-        int hours = Integer.parseInt(parts[0]);
-        int minutes = Integer.parseInt(parts[1]);
-        int seconds = Integer.parseInt(parts[2]);
+        int hours = parts[0];
+        int minutes = parts[1];
+        int seconds = parts[2];
 
-        return (seconds % 2 == 0 ? "Y" : "O")
+        return (secondsLamp(seconds))
                 + row(hours / 5, 4, 'R')
                 + row(hours % 5, 4, 'R')
                 + minuteRow(minutes / 5)
                 + row(minutes % 5, 4, 'Y');
+    }
+
+    private int[] parseTime(String time) {
+        String[] parts = time.split(":");
+
+        return new int[] {
+                Integer.parseInt(parts[0]),
+                Integer.parseInt(parts[1]),
+                Integer.parseInt(parts[2])
+        };
     }
 
     private void validateDigitalTime(String time) {
@@ -69,6 +79,10 @@ public class BerlinClock {
         }
 
         return result.toString();
+    }
+
+    private String secondsLamp(int seconds) {
+        return seconds % 2 == 0 ? "Y" : "O";
     }
 
     // Feature 2: Berlin Clock -> Digital time
