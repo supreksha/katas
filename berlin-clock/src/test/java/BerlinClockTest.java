@@ -176,4 +176,13 @@ class BerlinClockTest {
         assertThrows(IllegalArgumentException.class,
                 () -> clock.convertToBerlinClock(" 12:00:00"));
     }
+
+    // Feature 2: Berlin Clock -> Digital time
+    @Test
+    void convertsBerlinMidnightToDigitalTime() {
+        assertEquals(
+                "00:00:00",
+                clock.toDigitalTime("YOOOOOOOOOOOOOOOOOOOOOOO")
+        );
+    }
 }

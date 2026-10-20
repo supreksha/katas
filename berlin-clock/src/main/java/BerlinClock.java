@@ -1,6 +1,7 @@
 
 public class BerlinClock {
 
+    // Feature 1: Digital time -> Berlin Clock
     public String convertToBerlinClock(String time) {
         validateDigitalTime(time);
 
@@ -69,5 +70,38 @@ public class BerlinClock {
         }
 
         return result.toString();
+    }
+
+    // Feature 2: Berlin Clock -> Digital time
+    public String toDigitalTime(String berlinTime) {
+
+        String secondsRow = berlinTime.substring(0, 1);
+        String fiveHourRow = berlinTime.substring(1, 5);
+        String oneHourRow = berlinTime.substring(5, 9);
+        String fiveMinuteRow = berlinTime.substring(9, 20);
+        String oneMinuteRow = berlinTime.substring(20, 24);
+
+        int hours = countLights(fiveHourRow, 'R') * 5
+                + countLights(oneHourRow, 'R');
+
+        int minutes = countLights(fiveMinuteRow, 'Y')
+                + countLights(fiveMinuteRow, 'R');
+        minutes = minutes * 5 + countLights(oneMinuteRow, 'Y');
+
+        int seconds = secondsRow.equals("Y") ? 0 : 1;
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    private int countLights(String row, char color) {
+        int count = 0;
+
+        for (char light : row.toCharArray()) {
+            if (light == color) {
+                count++;
+            }
+        }
+
+        return count;
     }
 }
